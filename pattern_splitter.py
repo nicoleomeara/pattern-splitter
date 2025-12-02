@@ -9,6 +9,14 @@ import os
 import re
 from PyPDF2 import PdfReader, PdfWriter
 
+# Constants for text length thresholds
+MIN_PATTERN_NAME_LENGTH = 3
+MAX_PATTERN_NAME_LENGTH = 100
+MAX_TITLE_LENGTH = 80
+MIN_CAPS_TITLE_LENGTH = 5
+MAX_CAPS_TITLE_LENGTH = 50
+MAX_FILENAME_LENGTH = 100
+
 
 def extract_text_from_page(page):
     """Extract text content from a PDF page."""
@@ -48,14 +56,14 @@ def find_pattern_name(text):
         match = re.match(r'^(.+?)\s+Pattern\s*$', line, re.IGNORECASE)
         if match:
             name = match.group(1).strip()
-            if len(name) > 2 and len(name) < 100:
+            if MIN_PATTERN_NAME_LENGTH < len(name) < MAX_PATTERN_NAME_LENGTH:
                 return sanitize_filename(name)
     
     # If no explicit pattern marker, use the first non-empty line as title
     # if it looks like a title (short, possibly capitalized)
     for line in lines[:5]:
         line = line.strip()
-        if line and len(line) > 2 and len(line) < 80:
+        if line and MIN_PATTERN_NAME_LENGTH < len(line) < MAX_TITLE_LENGTH:
             # Skip lines that look like page numbers or headers
             if re.match(r'^[\d\s]+$', line):
                 continue
@@ -76,8 +84,8 @@ def sanitize_filename(name):
     sanitized = sanitized.strip('. ')
     
     # Limit length
-    if len(sanitized) > 100:
-        sanitized = sanitized[:100]
+    if len(sanitized) > MAX_FILENAME_LENGTH:
+        sanitized = sanitized[:MAX_FILENAME_LENGTH]
     
     return sanitized if sanitized else "Unnamed_Pattern"
 
@@ -124,7 +132,7 @@ def is_pattern_start(current_text, previous_text=None):
             return True
         
         # Check for all-caps title that looks like a pattern name
-        if first_line.isupper() and 5 < len(first_line) < 50:
+        if first_line.isupper() and MIN_CAPS_TITLE_LENGTH < len(first_line) < MAX_CAPS_TITLE_LENGTH:
             # Only count as pattern start if it's not a generic header
             if not re.match(r'^(MATERIALS|INSTRUCTIONS|NOTES|ABBREVIATIONS)', first_line):
                 return True
