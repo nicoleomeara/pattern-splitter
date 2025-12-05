@@ -16,7 +16,20 @@ This tool splits PDF files containing multiple weaving patterns into individual 
 ## Installation
 
 1. Clone this repository or download the files
-2. Install the required Python packages:
+2. Create and activate a virtual environment:
+
+```bash
+# Create virtual environment
+python3 -m venv .venv
+
+# Activate virtual environment (Mac/Linux)
+source .venv/bin/activate
+
+# Activate virtual environment (Windows)
+.venv\Scripts\activate
+```
+
+3. Install the required Python packages:
 
 ```bash
 pip install -r requirements.txt
@@ -28,12 +41,20 @@ pip install -r requirements.txt
 
 **Option 1: GUI Application (Easiest and Most Reliable!)**
 ```bash
+# First, activate your virtual environment
+source .venv/bin/activate  # Mac/Linux
+# OR
+.venv\Scripts\activate     # Windows
+
+# Then run the GUI
 python pdf_splitter_gui.py
 ```
 - User-friendly interface with drag-and-drop support
 - No risk of hanging or freezing
 - Manual input option if automatic detection fails
 - Real-time progress feedback
+
+**Note:** Always activate your virtual environment first to ensure all dependencies are available.
 
 **Option 2: Interactive Script**
 ```bash
@@ -175,6 +196,49 @@ python pattern_splitter_fixed.py -h
 # Legacy version
 .venv/bin/python pattern_splitter.py -h
 ```
+
+---
+
+## 🏷️ Pattern Renamer Tool
+
+The Pattern Renamer is a companion tool that automatically renames PDF pattern files based on their internal titles.
+
+### Features
+
+- **Batch Processing**: Select and analyze multiple PDF files at once
+- **Smart Title Detection**: Automatically extracts pattern names from PDF content
+- **Manual Override**: Double-click to edit any proposed filename
+- **Conflict Detection**: Warns about filename conflicts before renaming
+- **Safe Operation**: Preview all changes before applying them
+- **Export Results**: Save rename lists to CSV for record keeping
+
+### Usage
+
+**GUI Version (Recommended)**:
+```bash
+# First, activate your virtual environment
+source .venv/bin/activate  # Mac/Linux
+# OR
+.venv\Scripts\activate     # Windows
+
+# Then run the renamer GUI
+python pattern_renamer_gui.py
+```
+
+**Or use the launcher script**:
+```bash
+./run_pattern_renamer.sh
+```
+
+### How It Works
+
+1. **Title Extraction**: Searches PDF metadata and content for pattern titles
+2. **Smart Recognition**: Looks for common pattern naming conventions
+3. **Filename Sanitization**: Cleans titles to be filesystem-safe
+4. **Preview & Edit**: Shows proposed names before any changes
+5. **Batch Rename**: Safely renames multiple files at once
+
+---
 
 ## Contributing
 

@@ -499,6 +499,7 @@ class PDFSplitterGUI:
         
         # Bind events
         self.edit_entry.bind('<Return>', lambda e: self.finish_editing())
+        self.edit_entry.bind('<KP_Enter>', lambda e: self.finish_editing())  # Numpad Enter
         self.edit_entry.bind('<Escape>', lambda e: self.cancel_editing())
         self.edit_entry.bind('<FocusOut>', lambda e: self.finish_editing())
     
@@ -687,6 +688,7 @@ class ManualInputDialog:
         
         # Bind Enter key to add button
         self.dialog.bind('<Return>', lambda e: self.add_range())
+        self.dialog.bind('<KP_Enter>', lambda e: self.add_range())  # Numpad Enter
     
     def add_range(self):
         """Add a page range to the list."""
