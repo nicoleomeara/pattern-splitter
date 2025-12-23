@@ -1,0 +1,50 @@
+#!/bin/bash
+# PDF TOC Splitter Mac App
+set -e
+
+# Get the directory where this script is located (inside the app bundle)
+APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+SCRIPT_DIR="$APP_DIR"
+
+cd "$SCRIPT_DIR"
+
+# Install dependencies if needed
+install_deps() {
+    if ! python3 -c "import fitz" 2>/dev/null; then
+        osascript -e 'display dialog "Installing dependencies for PDF TOC Splitter..." buttons {"OK"} default button 1'
+        
+        if [ ! -d ".venv" ]; then
+            python3 -m venv .venv
+        fi
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install pymupdf
+    fi
+}
+
+# Run the GUI
+run_gui() {
+    # Activate virtual environment if it exists
+    if [ -d ".venv" ]; then
+        source .venv/bin/activate
+    fi
+    
+    python3 pdf_splitter_gui.py
+}
+
+# Main execution
+main() {
+    # Check if we can run Python
+    if ! command -v python3 &> /dev/null; then
+        osascript -e 'display dialog "Python 3 is required but not found. Please install Python 3." buttons {"OK"} default button 1'
+        exit 1
+    fi
+    
+    # Install dependencies
+    install_deps
+    
+    # Run the GUI
+    run_gui
+}
+
+main "$@"
